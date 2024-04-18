@@ -23,9 +23,9 @@ class AnalyticController extends Controller
         );
     }
 
-    public function showMonthly()
+    public function showMonthly(int $year = 2024)
     {
-        $year = 2024;
+        // $year = 2024;
 
         dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
             ->selectRaw('SUM(total) as amount')

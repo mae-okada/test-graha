@@ -11,9 +11,11 @@ Route::get('/', function () {
 //     return dd('This is analytics page.');
 // });
 
-Route::controller(AnalyticController::class)->group(function () {
-    Route::get('/analytics', 'index');
-    Route::get('/analytics/weekly', 'showWeekly');
-    Route::get('/analytics/monthly', 'showMonthly');
-    Route::get('/analytics/monthly/all', 'showMonthlyAll');
-});
+Route::controller(AnalyticController::class)
+    ->prefix('/analytics')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/weekly', 'showWeekly');
+        Route::get('/monthly/{year?}', 'showMonthly');
+        Route::get('/all-month', 'showMonthlyAll');
+    });
