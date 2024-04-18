@@ -18,32 +18,34 @@ class AnalyticController extends Controller
         $year = 2023;
         $month = 7;
 
-        $results = Analytics::select(
+        $weeklyAnalytics = Analytics::select(
             DB::raw('WEEK(weekly_date) as week'),
             DB::raw('SUM(total) as amount')
         )
-            ->whereRaw("MONTH(monthly_date) = $month AND YEAR(monthly_date) = $year")
+            ->whereYear('monthly_date', $year)
+            ->whereMonth('monthly_date', $month)
             ->groupBy('week')
             ->get()
             ->toArray();
 
-        // Add labels to the results
-        array_walk($results, function (&$result) {
+        // Add labels to the weeklyAnalytics
+        array_walk($weeklyAnalytics, function (&$weeklyAnalytic) {
             static $weekNumber = 1;
-            $result['label'] = $weekNumber++;
-            unset($result['week']);
+            $weeklyAnalytic['label'] = $weekNumber++;
+            unset($weeklyAnalytic['week']);
         });
 
-        dd($results);
+        dd($weeklyAnalytics);
 
     }
 
     public function showMonthly()
     {
-        dd(Analytics::select(
-            DB::raw('SUM(total) as amount'),
-            DB::raw("DATE_FORMAT(STR_TO_DATE(monthly_date, '%Y-%m-%d'), '%b') as label")
-        )
+        $year = 2024;
+
+        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
+            ->selectRaw('SUM(total) as amount')
+            ->whereYear('monthly_date', $year)
             ->groupBy('monthly_date')
             ->get()
             ->toArray()
