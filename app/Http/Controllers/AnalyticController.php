@@ -13,6 +13,29 @@ class AnalyticController extends Controller
         dd($analytics);
     }
 
+    public function showMonthlyAll()
+    {
+        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
+            ->selectRaw('SUM(total) as amount')
+            ->groupBy('monthly_date')
+            ->get()
+            ->toArray()
+        );
+    }
+
+    public function showMonthly()
+    {
+        $year = 2024;
+
+        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
+            ->selectRaw('SUM(total) as amount')
+            ->whereYear('monthly_date', $year)
+            ->groupBy('monthly_date')
+            ->get()
+            ->toArray()
+        );
+    }
+
     public function showWeekly()
     {
         $year = 2023;
@@ -37,18 +60,5 @@ class AnalyticController extends Controller
 
         dd($weeklyAnalytics);
 
-    }
-
-    public function showMonthly()
-    {
-        $year = 2024;
-
-        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
-            ->selectRaw('SUM(total) as amount')
-            ->whereYear('monthly_date', $year)
-            ->groupBy('monthly_date')
-            ->get()
-            ->toArray()
-        );
     }
 }

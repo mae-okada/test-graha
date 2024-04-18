@@ -15,4 +15,5 @@ Route::controller(AnalyticController::class)->group(function () {
     Route::get('/analytics', 'index');
     Route::get('/analytics/weekly', 'showWeekly');
     Route::get('/analytics/monthly', 'showMonthly');
+    Route::get('/analytics/monthly/all', 'showMonthlyAll');
 });
