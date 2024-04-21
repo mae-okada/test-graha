@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Analytics;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class AnalyticController extends Controller
 {
@@ -15,50 +16,60 @@ class AnalyticController extends Controller
 
     public function showMonthlyAll()
     {
-        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
+        $monthlyDatas = Analytics::selectRaw('monthly_date as label')
             ->selectRaw('SUM(total) as amount')
             ->groupBy('monthly_date')
             ->get()
-            ->toArray()
-        );
+            ->map(function ($monthlyData) {
+                $monthlyData->label = Carbon::parse($monthlyData->label)->format('M Y');
+
+                return $monthlyData;
+            });
+
+        return JsonResource::collection($monthlyDatas);
     }
 
     public function showMonthly(int $year = 2024)
     {
         // $year = 2024;
 
-        dd(Analytics::selectRaw("DATE_FORMAT(monthly_date, '%b') as label")
+        $monthlyDatas = Analytics::selectRaw('monthly_date as label')
             ->selectRaw('SUM(total) as amount')
             ->whereYear('monthly_date', $year)
             ->groupBy('monthly_date')
             ->get()
-            ->toArray()
-        );
+            ->map(function ($monthlyData) {
+                $monthlyData->label = Carbon::parse($monthlyData->label)->format('M');
+
+                return $monthlyData;
+            });
+
+        return JsonResource::collection($monthlyDatas);
     }
 
     public function showWeekly()
     {
-        $year = 2023;
-        $month = 7;
+        $year = 2024;
+        $month = 2;
 
-        $weeklyAnalytics = Analytics::select(
-            DB::raw('WEEK(weekly_date) as week'),
-            DB::raw('SUM(total) as amount')
-        )
+        $weeklyAnalytics = Analytics::selectRaw('weekly_date')
+            ->selectRaw('SUM(total) as amount')
             ->whereYear('monthly_date', $year)
             ->whereMonth('monthly_date', $month)
-            ->groupBy('week')
+            ->groupBy('weekly_date')
             ->get()
-            ->toArray();
+            ->map(function ($analytic) use ($year, $month) {
+                $weeklyDate = Carbon::parse($analytic->label);
+                $startDate = Carbon::create($year, $month, 1);
 
-        // Add labels to the weeklyAnalytics
-        array_walk($weeklyAnalytics, function (&$weeklyAnalytic) {
-            static $weekNumber = 1;
-            $weeklyAnalytic['label'] = $weekNumber++;
-            unset($weeklyAnalytic['week']);
-        });
+                return [
+                    // 'month' => $weeklyDate->format('M'),
+                    // 'differenceInWeek' => $weeklyDate->diffInWeeks($startDate),
+                    'label' => 1 + (int) ($weeklyDate->diffInWeeks($startDate) * (-1)),
+                    'amount' => $analytic->amount,
+                ];
+            });
 
-        dd($weeklyAnalytics);
-
+        return JsonResource::collection($weeklyAnalytics);
     }
 }
