@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnalyticController;
+use App\Http\Controllers\FirebasePushNotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,3 +20,5 @@ Route::controller(AnalyticController::class)
         Route::get('/monthly/{year?}', 'showMonthly');
         Route::get('/all-month', 'showMonthlyAll');
     });
+
+Route::get('/notification', [FirebasePushNotificationController::class, 'notification']);
