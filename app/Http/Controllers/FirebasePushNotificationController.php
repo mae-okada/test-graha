@@ -17,8 +17,9 @@ class FirebasePushNotificationController extends Controller
     public function notification()
     {
         $fcmToken = 'dN39KIvvCLAASfoZNXg1n8:APA91bHvdKCfRyhHbWgAn-IpeLG0_poWnIgTEttu0OCJpQAKe4VkV0ULBfwCE3GqzgT4nst0jKHicmurpQJ3BihtZ294_MPblYrfpqNlgTR321XW9iRd4ShTi0Z1HOsNEh3cfiEKwl2m';
-        $title = 'Subscription';
-        $body = 'Thanks for subscribe to our channel!!!';
+        // $fcmToken = 'dVya0Q01wXqTJImXzhK-_h:APA91bG-1HcJpWzvB04h652zMLLqlM3hkFFxeJhLtUEuOXRDD5sj20L0DxuPVMObSpueAJEdgCUZ93rKyz87UYFB8tXbNNhnDLK_eeBEloNJBrK1um3nY5HME4PeIHTKIA_DD94qXNr2';
+        // $title = 'Subscription';
+        // $body = 'Thanks for subscribe to our channel!!!';
 
         // $message = CloudMessage::fromArray([
         //     'token' => $fcmToken,
@@ -31,8 +32,11 @@ class FirebasePushNotificationController extends Controller
         // $this->notification->send($message);
 
         $notification = new SendPushNotification();
+        // $delay = now()->addMinutes(1);
 
-        Notification::route('fcm', $fcmToken)->notify($notification);
+        // Notification::route('fcm', $fcmToken)->notify($notification);
+        Notification::route('database')->notify($notification);
+        // Notification::route('fcm', $fcmToken)->notify($notification->delay($delay));
 
         return response()->json(['message' => 'Notification sent successfully']);
 
