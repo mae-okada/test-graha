@@ -44,4 +44,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function routeNotificationForFcm()
+    {
+        return [
+            'dN39KIvvCLAASfoZNXg1n8:APA91bHvdKCfRyhHbWgAn-IpeLG0_poWnIgTEttu0OCJpQAKe4VkV0ULBfwCE3GqzgT4nst0jKHicmurpQJ3BihtZ294_MPblYrfpqNlgTR321XW9iRd4ShTi0Z1HOsNEh3cfiEKwl2m',
+            'dVya0Q01wXqTJImXzhK-_h:APA91bG-1HcJpWzvB04h652zMLLqlM3hkFFxeJhLtUEuOXRDD5sj20L0DxuPVMObSpueAJEdgCUZ93rKyz87UYFB8tXbNNhnDLK_eeBEloNJBrK1um3nY5HME4PeIHTKIA_DD94qXNr2', // punya kak dhar
+        ];
+    }
 }

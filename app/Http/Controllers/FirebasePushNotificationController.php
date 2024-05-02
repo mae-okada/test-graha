@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Notifications\SendPushNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -35,7 +36,11 @@ class FirebasePushNotificationController extends Controller
         // $delay = now()->addMinutes(1);
 
         // Notification::route('fcm', $fcmToken)->notify($notification);
-        Notification::route('database')->notify($notification);
+        // Notification::route('database')->notify($notification);
+
+        $user = User::first();
+        $user->notify($notification);
+
         // Notification::route('fcm', $fcmToken)->notify($notification->delay($delay));
 
         return response()->json(['message' => 'Notification sent successfully']);

@@ -19,7 +19,8 @@ class SendPushNotification extends Notification implements ShouldQueue
     {
         return [
             FcmChannel::class,
-            DatabaseChannel::class,
+            // DatabaseChannel::class,
+            'database',
         ];
     }
 
@@ -39,5 +40,11 @@ class SendPushNotification extends Notification implements ShouldQueue
             'body' => 'This message is sent by Mae',
             'image' => 'https://en.wikipedia.org/wiki/File:Hello_kitty_character_portrait.png',
         ];
+    }
+
+    public function databaseType($notifiable)
+    {
+        return 'send push';
+        // DISARANKAN PAKAI ENUM
     }
 }
